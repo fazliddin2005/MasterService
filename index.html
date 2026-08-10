@@ -1055,6 +1055,20 @@ const ADMIN_CHATS = [
   "1058477969",  // Client (master)
 ];
 
+async function trackPhoneClick(source) {
+  const now = new Date();
+  const time = now.toLocaleString('ru-RU', { timeZone: 'Asia/Tashkent', hour:'2-digit', minute:'2-digit', day:'2-digit', month:'2-digit' });
+  const isMobile = /Mobi|Android/i.test(navigator.userAgent) ? '📱 Мобильный' : '💻 Компьютер';
+  const text = `📞 <b>Нажали на номер телефона!</b>\n\n🕐 <b>Время:</b> ${time}\n${isMobile}\n📍 <b>Источник:</b> ${source}\n\n⚡ Клиент скорее всего звонит прямо сейчас!`;
+  await Promise.all(ADMIN_CHATS.map(chat_id =>
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id, text, parse_mode: 'HTML' })
+    }).catch(e => console.log(e))
+  ));
+}
+
 async function sendToTelegram(name, phone, device, problem) {
   const text =
     `🔧 <b>Новая заявка с сайта!</b>\n\n` +
@@ -1175,6 +1189,15 @@ window.addEventListener('load', function(){
   // Also click-trigger for svc-btn
   document.querySelectorAll('.svc-btn').forEach(btn => {
     btn.addEventListener('click', () => openModal());
+  });
+
+  // Call tracking — barcha tel: linklarga
+  document.querySelectorAll('a[href="tel:+998900088227"]').forEach(link => {
+    link.addEventListener('click', () => {
+      const source = link.classList.contains('float-phone') ? 'Плавающая кнопка' :
+                     link.classList.contains('nav-phone') ? 'Шапка сайта' : 'Контакты';
+      trackPhoneClick(source);
+    });
   });
 });
 
