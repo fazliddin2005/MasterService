@@ -1055,11 +1055,11 @@ const ADMIN_CHATS = [
   "1058477969",  // Client (master)
 ];
 
-async function trackPhoneClick(source) {
+async function trackClick(emoji, title, source) {
   const now = new Date();
   const time = now.toLocaleString('ru-RU', { timeZone: 'Asia/Tashkent', hour:'2-digit', minute:'2-digit', day:'2-digit', month:'2-digit' });
-  const isMobile = /Mobi|Android/i.test(navigator.userAgent) ? '📱 Мобильный' : '💻 Компьютер';
-  const text = `📞 <b>Нажали на номер телефона!</b>\n\n🕐 <b>Время:</b> ${time}\n${isMobile}\n📍 <b>Источник:</b> ${source}\n\n⚡ Клиент скорее всего звонит прямо сейчас!`;
+  const device = /Mobi|Android/i.test(navigator.userAgent) ? '📱 Мобильный' : '💻 Компьютер';
+  const text = `${emoji} <b>${title}</b>\n\n🕐 <b>Время:</b> ${time}\n${device}\n📍 <b>Источник:</b> ${source}\n\n⚡ Клиент скорее всего пишет прямо сейчас!`;
   await Promise.all(ADMIN_CHATS.map(chat_id =>
     fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
       method: 'POST',
@@ -1191,12 +1191,29 @@ window.addEventListener('load', function(){
     btn.addEventListener('click', () => openModal());
   });
 
-  // Call tracking — barcha tel: linklarga
+  // 📞 Telefon tracking
   document.querySelectorAll('a[href="tel:+998900088227"]').forEach(link => {
     link.addEventListener('click', () => {
-      const source = link.classList.contains('float-phone') ? 'Плавающая кнопка' :
-                     link.classList.contains('nav-phone') ? 'Шапка сайта' : 'Контакты';
-      trackPhoneClick(source);
+      const src = link.classList.contains('float-phone') ? 'Плавающая кнопка' :
+                  link.classList.contains('nav-phone') ? 'Шапка сайта' : 'Контакты';
+      trackClick('📞', 'Нажали на номер телефона!', src);
+    });
+  });
+
+  // ✈️ Telegram tracking
+  document.querySelectorAll('a[href="https://t.me/MasterServiceZ"]').forEach(link => {
+    link.addEventListener('click', () => {
+      const src = link.classList.contains('float-tg') ? 'Плавающая кнопка TG' :
+                  link.classList.contains('btn-secondary') ? 'Главная страница' :
+                  link.classList.contains('btn-outline-white') ? 'Секция контактов' : 'Telegram ссылка';
+      trackClick('✈️', 'Перешли в Telegram!', src);
+    });
+  });
+
+  // 💬 WhatsApp tracking
+  document.querySelectorAll('a[href*="wa.me"]').forEach(link => {
+    link.addEventListener('click', () => {
+      trackClick('💬', 'Перешли в WhatsApp!', 'Плавающая кнопка WA');
     });
   });
 });
