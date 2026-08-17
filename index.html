@@ -225,6 +225,18 @@ footer{background:#1a1c22;padding:44px 0}
 .float-tg{background:#2AABEE}
 .float-wa{background:#25D366}
 .float-phone{background:var(--accent)}
+.tg-wrap{position:relative;display:inline-block}
+.tg-menu{display:none;position:absolute;top:calc(100% + 8px);left:0;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.15);padding:8px;min-width:240px;z-index:9999;flex-direction:column;gap:4px}
+.tg-menu.show{display:flex}
+.tg-menu a{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;text-decoration:none;color:#222;font-weight:600;font-size:14px;transition:background .15s;white-space:nowrap}
+.tg-menu a:hover{background:#f0f0f0}
+.tg-menu a small{color:#888;font-weight:400;font-size:12px}
+.float-menu{display:none;position:absolute;right:64px;top:50%;transform:translateY(-50%);background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.15);padding:8px;min-width:230px;z-index:9999;flex-direction:column;gap:4px}
+.float-menu.show{display:flex}
+.float-menu a{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;text-decoration:none;color:#222;font-weight:600;font-size:14px;transition:background .15s;white-space:nowrap}
+.float-menu a:hover{background:#f0f0f0}
+.float-menu a small{color:#888;font-weight:400;font-size:12px}
+.float-btn-wrap{position:relative}
 
 /* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px)}
@@ -371,7 +383,13 @@ footer{background:#1a1c22;padding:44px 0}
       <p class="hero-sub">Профессиональный ремонт любой техники прямо у вас дома. Гарантия 6 месяцев на все работы. Оплата только после ремонта.</p>
       <div class="hero-actions">
         <button class="btn-primary" onclick="openModal()">🔧 Вызвать мастера</button>
-        <a href="https://t.me/MasterServiceZ" class="btn-secondary" target="_blank">✈️ Написать в Telegram</a>
+        <div class="tg-wrap">
+          <button class="btn-secondary" onclick="openMenu('hero-tg',event)">✈️ Написать в Telegram</button>
+          <div class="tg-menu" id="hero-tg">
+            <a href="https://t.me/MasterServiceZ" target="_blank" onclick="closeMenu('hero-tg');trackClick('✈️','Telegram: @MasterServiceZ','Главная страница')">✈️ @MasterServiceZ <small>(Мастер)</small></a>
+            <a href="https://t.me/F19Nizomiddinov" target="_blank" onclick="closeMenu('hero-tg');trackClick('✈️','Telegram: @F19Nizomiddinov','Главная страница')">✈️ @F19Nizomiddinov <small>(Fazliddin)</small></a>
+          </div>
+        </div>
       </div>
       <div class="hero-stats">
         <div class="stat"><div class="stat-num">8000+</div><div class="stat-label">Ремонтов</div></div>
@@ -827,7 +845,13 @@ footer{background:#1a1c22;padding:44px 0}
     <p>Звоните или пишите в Telegram — ответим в течение нескольких минут</p>
     <div class="cta-buttons">
       <button class="btn-white" onclick="openModal()">🔧 Вызвать мастера</button>
-      <a href="https://t.me/MasterServiceZ" class="btn-outline-white" target="_blank">✈️ Написать в Telegram</a>
+      <div class="tg-wrap">
+        <button class="btn-outline-white" onclick="openMenu('contact-tg',event)">✈️ Написать в Telegram</button>
+        <div class="tg-menu" id="contact-tg">
+          <a href="https://t.me/MasterServiceZ" target="_blank" onclick="closeMenu('contact-tg');trackClick('✈️','Telegram: @MasterServiceZ','Секция контактов')">✈️ @MasterServiceZ <small>(Мастер)</small></a>
+          <a href="https://t.me/F19Nizomiddinov" target="_blank" onclick="closeMenu('contact-tg');trackClick('✈️','Telegram: @F19Nizomiddinov','Секция контактов')">✈️ @F19Nizomiddinov <small>(Fazliddin)</small></a>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -846,16 +870,8 @@ footer{background:#1a1c22;padding:44px 0}
           <div><div class="contact-item-label">Телефон</div><div class="contact-item-value"><a href="tel:+998900088227">+998 90 008-82-27</a></div></div>
         </div>
         <div class="contact-item">
-          <div class="contact-item-icon">📞</div>
-          <div><div class="contact-item-label">Телефон 2</div><div class="contact-item-value"><a href="tel:+998999193322">+998 99 919-33-22</a></div></div>
-        </div>
-        <div class="contact-item">
           <div class="contact-item-icon">✈️</div>
           <div><div class="contact-item-label">Telegram</div><div class="contact-item-value"><a href="https://t.me/MasterServiceZ" target="_blank">@MasterServiceZ</a></div></div>
-        </div>
-        <div class="contact-item">
-          <div class="contact-item-icon">✈️</div>
-          <div><div class="contact-item-label">Telegram 2</div><div class="contact-item-value"><a href="https://t.me/F19Nizomiddinov" target="_blank">@F19Nizomiddinov</a></div></div>
         </div>
         <div class="contact-item">
           <div class="contact-item-icon">📍</div>
@@ -1021,9 +1037,23 @@ footer{background:#1a1c22;padding:44px 0}
 
 <!-- FLOATING -->
 <div class="floating-buttons">
-  <a href="https://wa.me/998900088227" class="float-btn float-wa" target="_blank" title="WhatsApp">💬</a>
-  <a href="https://t.me/MasterServiceZ" class="float-btn float-tg" target="_blank">✈️</a>
-  <a href="tel:+998900088227" class="float-btn float-phone">📞</a>
+  <a href="https://wa.me/998900088227" class="float-btn float-wa" target="_blank" title="WhatsApp" onclick="trackClick('💬','WhatsApp','Плавающая кнопка')">💬</a>
+
+  <div class="float-btn-wrap">
+    <button class="float-btn float-tg" onclick="openMenu('float-tg',event)" title="Telegram">✈️</button>
+    <div class="float-menu" id="float-tg">
+      <a href="https://t.me/MasterServiceZ" target="_blank" onclick="closeMenu('float-tg');trackClick('✈️','Telegram: @MasterServiceZ','Плавающая кнопка')">✈️ @MasterServiceZ <small>(Мастер)</small></a>
+      <a href="https://t.me/F19Nizomiddinov" target="_blank" onclick="closeMenu('float-tg');trackClick('✈️','Telegram: @F19Nizomiddinov','Плавающая кнопка')">✈️ @F19Nizomiddinov <small>(Fazliddin)</small></a>
+    </div>
+  </div>
+
+  <div class="float-btn-wrap">
+    <button class="float-btn float-phone" onclick="openMenu('float-phone',event)" title="Позвонить">📞</button>
+    <div class="float-menu" id="float-phone">
+      <a href="tel:+998900088227" onclick="closeMenu('float-phone');trackClick('📞','Телефон: +998 90 008-82-27','Плавающая кнопка')">📞 +998 90 008-82-27 <small>(Мастер)</small></a>
+      <a href="tel:+998999193322" onclick="closeMenu('float-phone');trackClick('📞','Телефон: +998 99 919-33-22','Плавающая кнопка')">📞 +998 99 919-33-22 <small>(Fazliddin)</small></a>
+    </div>
+  </div>
 </div>
 
 <!-- MODAL -->
@@ -1110,6 +1140,9 @@ function toggleLang(){
   }
 }
 
+function openMenu(id,e){if(e)e.stopPropagation();document.querySelectorAll('.tg-menu,.float-menu').forEach(m=>{if(m.id!==id)m.classList.remove('show');});const el=document.getElementById(id);if(el)el.classList.toggle('show');}
+function closeMenu(id){const el=document.getElementById(id);if(el)el.classList.remove('show');}
+document.addEventListener('click',function(){document.querySelectorAll('.tg-menu,.float-menu').forEach(m=>m.classList.remove('show'));});
 function openModal(){document.getElementById('modal').classList.add('open')}
 function closeModal(){document.getElementById('modal').classList.remove('open')}
 function closeModalOutside(e){if(e.target.id==='modal')closeModal()}
@@ -1199,22 +1232,10 @@ window.addEventListener('load', function(){
     btn.addEventListener('click', () => openModal());
   });
 
-  // 📞 Telefon tracking
-  document.querySelectorAll('a[href="tel:+998900088227"]').forEach(link => {
+  // 📞 Nav phone tracking (header)
+  document.querySelectorAll('a[href="tel:+998900088227"].nav-phone').forEach(link => {
     link.addEventListener('click', () => {
-      const src = link.classList.contains('float-phone') ? 'Плавающая кнопка' :
-                  link.classList.contains('nav-phone') ? 'Шапка сайта' : 'Контакты';
-      trackClick('📞', 'Нажали на номер телефона!', src);
-    });
-  });
-
-  // ✈️ Telegram tracking
-  document.querySelectorAll('a[href="https://t.me/MasterServiceZ"]').forEach(link => {
-    link.addEventListener('click', () => {
-      const src = link.classList.contains('float-tg') ? 'Плавающая кнопка TG' :
-                  link.classList.contains('btn-secondary') ? 'Главная страница' :
-                  link.classList.contains('btn-outline-white') ? 'Секция контактов' : 'Telegram ссылка';
-      trackClick('✈️', 'Перешли в Telegram!', src);
+      trackClick('📞', 'Телефон: +998 90 008-82-27', 'Шапка сайта');
     });
   });
 
