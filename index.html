@@ -1117,8 +1117,12 @@ async function trackClick(emoji, title, source) {
   ));
 }
 
+// Chat IDs
+const FAZLIDDIN_CHAT = "1519856274";
+const MASTER_CHAT    = "1058477969";
+
 async function sendToTelegram(name, phone, device, problem) {
-  const text =
+  const textFazliddin =
     `🔧 <b>Новая заявка с сайта!</b>\n\n` +
     `👤 <b>Имя:</b> ${name}\n` +
     `📞 <b>Телефон:</b> ${phone}\n` +
@@ -1126,15 +1130,49 @@ async function sendToTelegram(name, phone, device, problem) {
     `📝 <b>Проблема:</b> ${problem}\n\n` +
     `⏰ Ответьте клиенту в течение 10 минут!`;
 
-  // Send to ALL admins at the same time
-  await Promise.all(ADMIN_CHATS.map(chat_id =>
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id, text, parse_mode: "HTML" })
-    }).catch(e => console.log(`Failed for ${chat_id}:`, e))
-  ));
+  // Мастерга — tugmali xabar
+  const textMaster =
+    `🔧 <b>Новая заявка с сайта!</b>\n\n` +
+    `👤 <b>Имя:</b> ${name}\n` +
+    `📞 <b>Телефон:</b> ${phone}\n` +
+    `🏠 <b>Техника:</b> ${device}\n` +
+    `📝 <b>Проблема:</b> ${problem}\n\n` +
+    `⏰ Нажмите кнопку, когда примете заявку!`;
+
+  const callbackData = `accepted|${name}|${phone}|${device}`;
+
+  // Fazliddinga oddiy xabar
+  fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: FAZLIDDIN_CHAT,
+      text: textFazliddin,
+      parse_mode: "HTML"
+    })
+  }).catch(e => console.log(e));
+
+  // Мастерга tugmali xabar
+  fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: MASTER_CHAT,
+      text: textMaster,
+      parse_mode: "HTML",
+      reply_markup: {
+        inline_keyboard: [[
+          { text: "✅ Qabul qildim", callback_data: callbackData }
+        ]]
+      }
+    })
+  }).catch(e => console.log(e));
 }
+
+// Мастер "Qabul qildim" bosganida polling orqali ushlash
+// Bu serverda bot webhook kerak. Hozircha saytda faqat tugmani ko'rsatamiz.
+// Webhook server (Railway/Node.js) uchun quyidagi endpoint kerak:
+// POST /webhook → callback_query.data ni parse qilib Fazliddinga xabar yuboradi
 
 // ── Language toggle ───────────────────────────────────────
 let lang='ru';
